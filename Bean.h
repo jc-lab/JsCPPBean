@@ -6,17 +6,6 @@
 #include "BeanFactory.h"
 #include "BeanInitializer.h"
 
-namespace JsCPPBean {
-	namespace internal {
-		class AutowiringVar {
-		public:
-			void *targetVar;
-			std::string className;
-			std::string beanName;
-		};
-	}
-}
-
 #define JSCPPBEAN_OBJECT_DECL() \
 	public: \
 		static void __jscppbean_objectInit()

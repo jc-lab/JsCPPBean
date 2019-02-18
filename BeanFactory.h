@@ -84,10 +84,12 @@ namespace JsCPPBean {
 		template<class T>
 		class BeanObjectContextImpl : public BeanObjectContextBase {
 		public:
+			void *ptr;
 			JsCPPUtils::SmartPointer<T> object;
 			virtual ~BeanObjectContextImpl() {}
-			BeanObjectContextImpl(JsCPPUtils::SmartPointer<T> &existingObject) : object(existingObject) { }
-			void *getPtr() override { return object.getPtr();  };
+			BeanObjectContextImpl(T *existingObject) : ptr(existingObject) { }
+			BeanObjectContextImpl(JsCPPUtils::SmartPointer<T> &existingObject) : object(existingObject) { ptr = object.getPtr(); }
+			void *getPtr() override { return ptr;  };
 			void callPostConstruct() override {
 				if (::_JsCPPUtils_private::Loki::SuperSubclassStrict< BeanInitializer, T>::value)
 				{
@@ -126,6 +128,17 @@ namespace JsCPPBean {
 
 		template<class T>
 		BeanBuilder *BeanFactory::beanBuilder(JsCPPUtils::SmartPointer<T> existingBean, const char *className, const char *beanName = NULL)
+		{
+			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
+			const char *name = beanName ? beanName : className;
+			beanCtx->className = className;
+			beanCtx->beanName = beanName;
+			beanCtx->beanBuilder.beanCtx = beanCtx;
+			return &(beanCtx->beanBuilder);
+		}
+
+		template<class T>
+		BeanBuilder *BeanFactory::beanBuilder(T* existingBean, const char *className, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
