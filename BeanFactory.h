@@ -127,7 +127,7 @@ namespace JsCPPBean {
 		void *resolveBeanByClass(const std::string& name);
 
 		template<class T>
-		BeanBuilder *BeanFactory::beanBuilder(JsCPPUtils::SmartPointer<T> existingBean, const char *className, const char *beanName = NULL)
+		BeanBuilder *beanBuilder(JsCPPUtils::SmartPointer<T> existingBean, const char *className, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
@@ -138,7 +138,7 @@ namespace JsCPPBean {
 		}
 
 		template<class T>
-		BeanBuilder *BeanFactory::beanBuilder(T* existingBean, const char *className, const char *beanName = NULL)
+		BeanBuilder *beanBuilder(T* existingBean, const char *className, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
