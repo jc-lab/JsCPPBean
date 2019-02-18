@@ -132,7 +132,7 @@ namespace JsCPPBean {
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
 			beanCtx->className = className;
-			beanCtx->beanName = beanName;
+			beanCtx->beanName = name;
 			beanCtx->beanBuilder.beanCtx = beanCtx;
 			return &(beanCtx->beanBuilder);
 		}
@@ -143,7 +143,7 @@ namespace JsCPPBean {
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
 			beanCtx->className = className;
-			beanCtx->beanName = beanName;
+			beanCtx->beanName = name;
 			beanCtx->beanBuilder.beanCtx = beanCtx;
 			return &(beanCtx->beanBuilder);
 		}
@@ -164,7 +164,7 @@ namespace JsCPPBean {
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
 			beanCtx->className = className;
-			beanCtx->beanName = beanName;
+			beanCtx->beanName = name;
 			m_beanClasses[className] = beanCtx;
 			m_beanObjects[name] = beanCtx;
 			return &(beanCtx->beanBuilder);
