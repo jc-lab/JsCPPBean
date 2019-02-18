@@ -157,7 +157,7 @@ namespace JsCPPBean {
 		}
 
 		template<class T>
-		BeanBuilder *BeanFactory::_beginRegisterBean(JsCPPUtils::SmartPointer<T> existingBean, const char *className, const char *beanName = NULL)
+		BeanBuilder *_beginRegisterBean(JsCPPUtils::SmartPointer<T> existingBean, const char *className, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
 			const char *name = beanName ? beanName : className;
