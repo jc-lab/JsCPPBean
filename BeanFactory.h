@@ -153,6 +153,8 @@ namespace JsCPPBean {
 			m_beanClasses[beanBuilder->beanCtx->className] = beanBuilder->beanCtx;
 			m_beanObjects[beanBuilder->beanCtx->beanName] = beanBuilder->beanCtx;
 			m_lock.unlock();
+			initializeBeanImpl(beanBuilder->beanCtx.getPtr(), false);
+			initializeBeanImpl(beanBuilder->beanCtx.getPtr(), true);
 			beanBuilder->beanCtx = NULL;
 		}
 
