@@ -154,7 +154,7 @@ namespace JsCPPBean {
 		JsCPPUtils::SmartPointer<BeanBuilder> _beginRegisterBean(JsCPPUtils::SmartPointer<T> existingBean, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
-			JsCPPUtils::SmartPointer<BeanBuilder> spBeanBuilder = new BeanBuilder(beanCtx.getPtr());
+			JsCPPUtils::SmartPointer<BeanBuilder> spBeanBuilder = new BeanBuilder(beanCtx);
 			beanCtx->className = typeid(T).name();
 			m_beanObjects["T" + beanCtx->className] = beanCtx;
 			if (beanName)
