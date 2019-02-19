@@ -17,7 +17,7 @@ int main() {
 	JsCPPBean::BeanFactory *beanFactory = JsCPPBean::BeanFactory::getInstance();
 	beanFactory->start();
 
-	mainProcess = (MainProcess *)beanFactory->resolveBeanByName("MainProcess");
+	mainProcess = beanFactory->autowire<MainProcess>();
 	mainProcess->run();
 
 	return 0;
