@@ -1,8 +1,7 @@
 # JsCPPBean
 JsCPPBean은 spring framework의 Bean과 Autowired처럼 클래스를 주입받아 사용할 수 있게 해주는 라이브러리 입니다.
 
-
-예제
+예제소스(https://github.com/jc-lab/JsCPPBeanTest)
 
 main.cpp
 
