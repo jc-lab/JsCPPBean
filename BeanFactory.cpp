@@ -22,21 +22,26 @@ namespace JsCPPBean {
 		return m_instance;
 	}
 
+	void BeanFactory::findAllDependency(BeanObjectContextBase *beanCtx)
+	{
+		// Find all dependencies
+		for (std::list<AutowiringObjectContext>::iterator awIter = beanCtx->autowirings.begin(); awIter != beanCtx->autowirings.end(); awIter++)
+		{
+			std::map<std::string, JsCPPUtils::SmartPointer<BeanObjectContextBase> >::iterator foundBean = m_beanObjects.find(awIter->mapName);
+			if (foundBean == m_beanObjects.end()) {
+				// could not find bean
+				throw exceptions::NoSuchBeanDefinitionException("Could not find bean: " + awIter->mapName);
+			}
+			awIter->beanCtx = foundBean->second.getPtr();
+		}
+	}
+
 	void BeanFactory::start()
 	{
 		// Find all dependencies
 		for (std::map<std::string, JsCPPUtils::SmartPointer<BeanObjectContextBase> >::iterator beanIter = m_beanObjects.begin(); beanIter != m_beanObjects.end(); beanIter++)
 		{
-			BeanObjectContextBase *beanCtx = beanIter->second.getPtr();
-			for (std::list<AutowiringObjectContext>::iterator awIter = beanCtx->autowirings.begin(); awIter != beanCtx->autowirings.end(); awIter++)
-			{
-				std::map<std::string, JsCPPUtils::SmartPointer<BeanObjectContextBase> >::iterator foundBean = m_beanObjects.find(awIter->mapName);
-				if (foundBean == m_beanObjects.end()) {
-					// could not find bean
-					throw exceptions::NoSuchBeanDefinitionException("Could not find bean: " + awIter->mapName);
-				}
-				awIter->beanCtx = foundBean->second.getPtr();
-			}
+			findAllDependency(beanIter->second.getPtr());
 		}
 
 		// initialize beans
@@ -61,6 +66,16 @@ namespace JsCPPBean {
 		}
 	}
 
+	// Bean 등록하지 않고 Autowired와 BeanInitialize 핸들러만 작동
+	void BeanFactory::autowireBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder)
+	{
+		std::list<BeanObjectContextBase *> callBeanStack;
+		m_lock.lock();
+		findAllDependency(beanBuilder->beanCtx.getPtr());
+		initializeBeanImpl(beanBuilder->beanCtx.getPtr(), callBeanStack);
+		m_lock.unlock();
+	}
+
 	// Bean 초기화와 함께 Bean등록
 	void BeanFactory::initializeBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder, const char *beanName)
 	{
@@ -73,15 +88,6 @@ namespace JsCPPBean {
 			beanBuilder->beanCtx->beanName = beanName;
 			m_beanObjects["B" + beanBuilder->beanCtx->beanName] = beanBuilder->beanCtx;
 		}
-		m_lock.unlock();
-	}
-
-	// Bean 등록하지 않고 Autowired와 BeanInitialize 핸들러만 작동
-	void BeanFactory::autowireBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder)
-	{
-		std::list<BeanObjectContextBase *> callBeanStack;
-		m_lock.lock();
-		initializeBeanImpl(beanBuilder->beanCtx.getPtr(), callBeanStack);
 		m_lock.unlock();
 	}
 

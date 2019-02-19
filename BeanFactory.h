@@ -117,6 +117,7 @@ namespace JsCPPBean {
 		// B{name} : User Bean Name
 		std::map<std::string, JsCPPUtils::SmartPointer<BeanObjectContextBase> > m_beanObjects;
 
+		void findAllDependency(BeanObjectContextBase *beanCtx);
 		void initializeBeanImpl(BeanObjectContextBase *beanObjectCtx, std::list<BeanObjectContextBase *> &callBeanCtx);
 
 	public:
