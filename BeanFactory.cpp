@@ -66,7 +66,15 @@ namespace JsCPPBean {
 		}
 	}
 
-	// Bean 등록하지 않고 Autowired와 BeanInitialize 핸들러만 작동
+	void BeanFactory::stop()
+	{
+		for (std::map<std::string, JsCPPUtils::SmartPointer<BeanObjectContextBase> >::iterator beanIter = m_beanObjects.begin(); beanIter != m_beanObjects.end(); )
+		{
+			beanIter->second->callPreDestroy();
+			beanIter = m_beanObjects.erase(beanIter);
+		}
+	}
+
 	void BeanFactory::autowireBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder)
 	{
 		std::list<BeanObjectContextBase *> callBeanStack;
@@ -76,7 +84,6 @@ namespace JsCPPBean {
 		m_lock.unlock();
 	}
 
-	// Bean 초기화와 함께 Bean등록
 	void BeanFactory::initializeBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder, const char *beanName)
 	{
 		std::list<BeanObjectContextBase *> callBeanStack;

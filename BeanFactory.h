@@ -127,6 +127,7 @@ namespace JsCPPBean {
 		static BeanFactory *getInstance();
 
 		void start() throw(exceptions::NoSuchBeanDefinitionException);
+		void stop();
 
 		template<class T>
 		JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder(JsCPPUtils::SmartPointer<T> existingBean)
