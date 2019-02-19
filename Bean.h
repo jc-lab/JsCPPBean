@@ -17,7 +17,7 @@
 	void CLASS::__jscppbean_objectInit() { \
 		::JsCPPBean::BeanFactory *beanFactory = ::JsCPPBean::BeanFactory::getInstance(); \
 		::JsCPPUtils::SmartPointer<CLASS> object = new CLASS(); \
-		::JsCPPBean::BeanFactory::BeanBuilder *beanBuilder = beanFactory->_beginRegisterBean(object, __VA_ARGS__);
+		::JsCPPUtils::SmartPointer<::JsCPPBean::BeanFactory::BeanBuilder> beanBuilder = beanFactory->_beginRegisterBean(object, __VA_ARGS__);
 
 #define JSCPPBEAN_BEAN_BEGIN_SUPPLIER(CLASS, SUPPLIER, ...) \
 	struct _JsCPPBeanClassLoader1_ ## CLASS { \
@@ -26,7 +26,7 @@
 	void CLASS::__jscppbean_objectInit() { \
 		::JsCPPBean::BeanFactory *beanFactory = ::JsCPPBean::BeanFactory::getInstance(); \
 		::JsCPPUtils::SmartPointer<CLASS> object = SUPPLIER(); \
-		::JsCPPBean::BeanFactory::BeanBuilder *beanBuilder = beanFactory->_beginRegisterBean(object, #CLASS, __VA_ARGS__);
+		::JsCPPUtils::SmartPointer<::JsCPPBean::BeanFactory::BeanBuilder> beanBuilder = beanFactory->_beginRegisterBean(object, #CLASS, __VA_ARGS__);
 
 #define JSCPPBEAN_BEAN_AUTOWIRED_LAZY(TARGETCLASS, BEANCLASS, VARNAME, ...) \
 		beanBuilder->addAutowiredObject<TARGETCLASS>(&TARGETCLASS::VARNAME, true, __VA_ARGS__); \

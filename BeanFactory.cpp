@@ -62,7 +62,7 @@ namespace JsCPPBean {
 	}
 
 	// Bean 초기화와 함께 Bean등록
-	void BeanFactory::initializeBean(BeanBuilder *beanBuilder, const char *beanName)
+	void BeanFactory::initializeBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder, const char *beanName)
 	{
 		std::list<BeanObjectContextBase *> callBeanStack;
 		m_lock.lock();
@@ -74,17 +74,15 @@ namespace JsCPPBean {
 			m_beanObjects["B" + beanBuilder->beanCtx->beanName] = beanBuilder->beanCtx;
 		}
 		m_lock.unlock();
-		beanBuilder->beanCtx = NULL;
 	}
 
 	// Bean 등록하지 않고 Autowired와 BeanInitialize 핸들러만 작동
-	void BeanFactory::autowireBean(BeanBuilder *beanBuilder)
+	void BeanFactory::autowireBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder)
 	{
 		std::list<BeanObjectContextBase *> callBeanStack;
 		m_lock.lock();
 		initializeBeanImpl(beanBuilder->beanCtx.getPtr(), callBeanStack);
 		m_lock.unlock();
-		beanBuilder->beanCtx = NULL;
 	}
 
 	void BeanFactory::initializeBeanImpl(BeanObjectContextBase *beanObjectCtx, std::list<BeanObjectContextBase *> &callBeanStack)

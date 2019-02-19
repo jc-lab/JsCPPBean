@@ -22,18 +22,11 @@ namespace JsCPPBean {
 		class BeanBuilder {
 		private:
 			friend class BeanFactory;
-			BeanObjectContextBase *beanObjectContext;
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx;
 
-			JsCPPUtils::SmartPointer<BeanObjectContextBase> swapBeanCtx() {
-				JsCPPUtils::SmartPointer<BeanObjectContextBase> temp = beanCtx;
-				beanCtx = NULL;
-				return temp;
-			}
-
 		public:
-			BeanBuilder(BeanObjectContextBase *beanObjectContext) {
-				this->beanObjectContext = beanObjectContext;
+			BeanBuilder(JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx) {
+				this->beanCtx = beanCtx;
 			}
 
 		public:
@@ -50,7 +43,7 @@ namespace JsCPPBean {
 					mapName.append(typeid(U).name());
 				}
 
-				this->beanObjectContext->autowirings.push_back(AutowiringObjectContext(mapName, varOffset, isLazy));
+				this->beanCtx->autowirings.push_back(AutowiringObjectContext(mapName, varOffset, isLazy));
 			}
 		};
 
@@ -79,10 +72,9 @@ namespace JsCPPBean {
 			std::string beanName;
 			std::string className;
 
-			BeanBuilder beanBuilder;
 			std::list<AutowiringObjectContext> autowirings; // dependencies
 
-			BeanObjectContextBase() : beanBuilder(this) {
+			BeanObjectContextBase() {
 				this->inited = 0;
 			}
 
@@ -136,32 +128,33 @@ namespace JsCPPBean {
 		void start() throw(exceptions::NoSuchBeanDefinitionException);
 
 		template<class T>
-		BeanBuilder *beanBuilder(JsCPPUtils::SmartPointer<T> existingBean)
+		JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder(JsCPPUtils::SmartPointer<T> existingBean)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
+			JsCPPUtils::SmartPointer<BeanBuilder> spBeanBuilder = new BeanBuilder(beanCtx);
 			beanCtx->className = typeid(T).name();
-			beanCtx->beanBuilder.beanCtx = beanCtx;
-			return &(beanCtx->beanBuilder);
+			return spBeanBuilder;
 		}
 
 		template<class T>
-		BeanBuilder *beanBuilder(T* existingBean)
+		JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder(T* existingBean)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
+			JsCPPUtils::SmartPointer<BeanBuilder> spBeanBuilder = new BeanBuilder(beanCtx);
 			beanCtx->className = typeid(T).name();
-			beanCtx->beanBuilder.beanCtx = beanCtx;
-			return &(beanCtx->beanBuilder);
+			return spBeanBuilder;
 		}
 
 		// Bean 초기화와 함께 Bean등록
-		void initializeBean(BeanBuilder *beanBuilder, const char *beanName);
+		void initializeBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder, const char *beanName);
 		// Bean 등록하지 않고 Autowired와 BeanInitialize 핸들러만 작동
-		void autowireBean(BeanBuilder *beanBuilder);
+		void autowireBean(JsCPPUtils::SmartPointer<BeanBuilder> beanBuilder);
 
 		template<class T>
-		BeanBuilder *_beginRegisterBean(JsCPPUtils::SmartPointer<T> existingBean, const char *beanName = NULL)
+		JsCPPUtils::SmartPointer<BeanBuilder> _beginRegisterBean(JsCPPUtils::SmartPointer<T> existingBean, const char *beanName = NULL)
 		{
 			JsCPPUtils::SmartPointer<BeanObjectContextBase> beanCtx = new BeanObjectContextImpl<T>(existingBean);
+			JsCPPUtils::SmartPointer<BeanBuilder> spBeanBuilder = new BeanBuilder(beanCtx.getPtr());
 			beanCtx->className = typeid(T).name();
 			m_beanObjects["T" + beanCtx->className] = beanCtx;
 			if (beanName)
@@ -169,7 +162,7 @@ namespace JsCPPBean {
 				beanCtx->beanName = beanName;
 				m_beanObjects["B" + beanCtx->beanName] = beanCtx;
 			}
-			return &(beanCtx->beanBuilder);
+			return spBeanBuilder;
 		}
 
 		template<class T>
