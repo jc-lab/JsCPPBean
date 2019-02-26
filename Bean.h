@@ -28,10 +28,10 @@
 		::JsCPPUtils::SmartPointer<CLASS> object = SUPPLIER(); \
 		::JsCPPUtils::SmartPointer<::JsCPPBean::BeanFactory::BeanBuilder> beanBuilder = beanFactory->_beginRegisterBean(object, #CLASS, __VA_ARGS__);
 
-#define JSCPPBEAN_BEAN_AUTOWIRED_LAZY(TARGETCLASS, BEANCLASS, VARNAME, ...) \
+#define JSCPPBEAN_BEAN_AUTOWIRED_LAZY(TARGETCLASS, VARNAME, ...) \
 		beanBuilder->addAutowiredObject<TARGETCLASS>(&TARGETCLASS::VARNAME, true, __VA_ARGS__); \
 
-#define JSCPPBEAN_BEAN_AUTOWIRED(TARGETCLASS, BEANCLASS, VARNAME, ...) \
+#define JSCPPBEAN_BEAN_AUTOWIRED(TARGETCLASS, VARNAME, ...) \
 		beanBuilder->addAutowiredObject<TARGETCLASS>(&TARGETCLASS::VARNAME, false, __VA_ARGS__); \
 
 #define JSCPPBEAN_BEAN_END() }
