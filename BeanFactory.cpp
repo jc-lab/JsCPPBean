@@ -81,6 +81,7 @@ namespace JsCPPBean {
 		m_lock.lock();
 		findAllDependency(beanBuilder->beanCtx.getPtr());
 		initializeBeanImpl(beanBuilder->beanCtx.getPtr(), callBeanStack);
+		beanBuilder->beanCtx->callPostConstruct();
 		m_lock.unlock();
 	}
 
@@ -122,6 +123,7 @@ namespace JsCPPBean {
 						throw exceptions::BeanCreationException("Circular reference detected: " + iter->mapName);
 					else
 						initializeBeanImpl(iter->beanCtx, callBeanStack);
+					*((void**)((char*)clsPtr + iter->varOffset)) = (iter->beanCtx->getPtr());
 				}
 			}
 			callBeanStack.pop_back();
