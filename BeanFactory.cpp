@@ -4,8 +4,6 @@
 #include "exceptions/BeanCreationException.hpp"
 
 namespace JsCPPBean {
-	BeanFactory *BeanFactory::m_instance = BeanFactory::getInstance();
-
 	BeanFactory::BeanFactory()
 	{
 	}
@@ -16,10 +14,8 @@ namespace JsCPPBean {
 
 	BeanFactory *BeanFactory::getInstance()
 	{
-		if (!m_instance) {
-			m_instance = new BeanFactory();
-		}
-		return m_instance;
+		static JsCPPUtils::SmartPointer<BeanFactory> instance = new BeanFactory();
+		return instance.getPtr();
 	}
 
 	void BeanFactory::findAllDependency(BeanObjectContextBase *beanCtx)

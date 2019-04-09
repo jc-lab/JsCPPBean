@@ -110,8 +110,6 @@ namespace JsCPPBean {
 			}
 		};
 
-		static BeanFactory *m_instance;
-
 		// Prefix
 		// T{name} : typeid(class).name()
 		// B{name} : User Bean Name
