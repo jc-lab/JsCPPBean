@@ -49,7 +49,7 @@ parent.cpp
 #include "ParentService.h"
 
 JSCPPBEAN_BEAN_BEGIN(ParentService, "ParentService")
-JSCPPBEAN_BEAN_AUTOWIRED_LAZY(ParentService, ChildService, m_child)
+JSCPPBEAN_BEAN_AUTOWIRED_LAZY(ParentService, m_child)
 JSCPPBEAN_BEAN_END()
 
 ParentService::ParentService()
@@ -90,7 +90,7 @@ child.cpp
 #include "ChildService.h"
 
 JSCPPBEAN_BEAN_BEGIN(ChildService, "ChildService")
-JSCPPBEAN_BEAN_AUTOWIRED(ChildService, ParentService, m_parent, "ParentService")
+JSCPPBEAN_BEAN_AUTOWIRED(ChildService, m_parent, "ParentService")
 JSCPPBEAN_BEAN_END()
 
 ChildService::ChildService()
@@ -142,8 +142,8 @@ MainProcess.cpp
 #include <stdio.h>
 
 JSCPPBEAN_BEAN_BEGIN(MainProcess, "MainProcess")
-JSCPPBEAN_BEAN_AUTOWIRED(MainProcess, ChildService, m_child)
-JSCPPBEAN_BEAN_AUTOWIRED(MainProcess, ParentService, m_parent, "ParentService")
+JSCPPBEAN_BEAN_AUTOWIRED(MainProcess, m_child)
+JSCPPBEAN_BEAN_AUTOWIRED(MainProcess, m_parent, "ParentService")
 JSCPPBEAN_BEAN_END()
 
 void MainProcess::run()
